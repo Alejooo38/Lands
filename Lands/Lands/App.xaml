@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- Aqui ligamos la pagina Login a la MainViewModel a traves del patron Locator
+    mediante una llave personalizada xmlns:infra="clr-namespace:Lands.Infrastruture
+    y posteriormente creamos un diccionario de recurso ResourceDictionary-->
+
+    <Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:infra="clr-namespace:Lands.Infrastruture"
+             x:Class="Lands.App">
+    <Application.Resources>
+
+<!-- Aqui instanciamos la clase IntanceLocator 
+     <infra:InstanceLocator x:Key="Locator"/> esto se hace pader ligar
+     la MaiViewModel con esta pagina, por lo tanto en la LoginPage se usa 
+     la propiedad Binding
+     BindingContext="{Binding Main, Source={StaticResource Locator}}"
+     esto para poder usar la Key que se llama Locator-->
+
+        <ResourceDictionary>
+            <infra:InstanceLocator x:Key="Locator"/>
+        </ResourceDictionary>
+        
+    </Application.Resources>
+</Application>
