@@ -1,17 +1,101 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ffimageloading="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             xmlns:ffimageloadingsvg="clr-namespace:FFImageLoading.Svg.Forms;assembly=FFImageLoading.Svg.Forms"
              x:Class="Lands.Views.LandsPage"
              BindingContext="{Binding Main, Source={StaticResource Locator}}"
              Title="Lands">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <ffimageloadingsvg:SvgImageSourceConverter 
+                x:Key="SvgImageSourceConverter"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <ContentPage.Content>
         <StackLayout
-            BindingContext="{Binding Lands}">
-            <Label
-                FontSize="Large"
-                Text="Welcome to Lands Page!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            BindingContext="{Binding Lands}"
+            Padding="5">
+            <SearchBar
+                Text="{Binding Filter, Mode=TwoWay}"
+                Placeholder="Search..."
+                SearchCommand="{Binding SearchCommand}"
+                BackgroundColor="Silver">
+            </SearchBar>
+            
+   <!--Esta propiedad sirve para que una lista se muestre hacia abajo.
+       IsRefreshing toca cargarla en la LandsViewModel sirve para refrescar 
+       la lista-->
+   
+            <ListView 
+                BackgroundColor="Silver"
+                HasUnevenRows="true"                
+                IsPullToRefreshEnabled="true"
+                IsRefreshing="{Binding IsRefreshing, Mode=TwoWay}"
+                ItemsSource="{Binding Lands}"
+                SeparatorVisibility="None"
+                RefreshCommand="{Binding RefreshCommand}">
+
+    <!--El Data template sirve como base para poder mostrar la lista
+        el contenedor Frame sirve para poder usar CornerRadius el 
+    cual sirve para dar bordes, HasShadow="True"-->
+                
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Frame
+                                CornerRadius="20"
+                                HasShadow="True"
+                                Margin="5">
+<!-- Los GestureRecognizers sirven para poder usar la propiedad Command 
+     en los elementos que no lo tienen como en el Frame-->
+
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SelectLandCommand}"/>
+                                </Frame.GestureRecognizers>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <ffimageloading:CachedImage 
+                                        Grid.Column="0"
+                                        HeightRequest="30"
+                                        WidthRequest="60"
+                                        Source="{Binding Flag, 
+                                        Converter={StaticResource SvgImageSourceConverter}}">
+                                    </ffimageloading:CachedImage>
+                                    
+                                    <StackLayout 
+                                            Grid.Column="1"
+                                            VerticalOptions="Center">
+                                        <Label 
+                                            FontAttributes="Bold"
+                                            FontSize="Medium" 
+                                            Text="{Binding Name}"
+                                            TextColor="Black">
+                                        </Label>
+                                        <Label 
+                                            Text="{Binding Capital}"
+                                            TextColor="Black">
+                                        </Label>
+                                    </StackLayout>
+                                    <Image 
+                                            Grid.Column="2"
+                                            HorizontalOptions="End" 
+                                            Source="ic_chevron_right">
+                                    </Image>
+                                </Grid>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
