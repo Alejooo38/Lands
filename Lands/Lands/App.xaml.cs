@@ -7,16 +7,25 @@ namespace Lands
 {
     public partial class App : Application
     {
+
         //Aqui todas las apps vienen predetermindas para que arranquen por la MainPage
         //Pero podermos cambiarla en esta caso la colocamos a iniciar por una NavegationPage
         //La cual nos sirve para poder invocar otras paginas.
+
+        #region Properties
+        public static NavigationPage Navigator
+        {
+            get;
+            internal set;
+        }
+        #endregion
 
         #region Constructors
         public App()
         {
             InitializeComponent();
 
-            this.MainPage = new NavigationPage(new LoginPage());
+            this.MainPage = new NavigationPage(new LoginPage());            
         }
         #endregion
 
@@ -36,7 +45,6 @@ namespace Lands
         {
             // Handle when your app resumes
         }
-
         #endregion
     }
 }

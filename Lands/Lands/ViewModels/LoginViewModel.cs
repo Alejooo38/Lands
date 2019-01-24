@@ -1,4 +1,5 @@
 ﻿using GalaSoft.MvvmLight.Command;
+using Lands.Helpers;
 using Lands.Views;
 using Rg.Plugins.Popup.Services;
 using System;
@@ -69,6 +70,9 @@ namespace Lands.ViewModels
         {
             this.IsRemembered = true;
             this.IsEnable = true;
+
+            this.Email = "druizbermud@uniminuto.edu.co";
+            this.Password = "123";
         }
         #endregion
 
@@ -96,18 +100,19 @@ namespace Lands.ViewModels
             if (string.IsNullOrEmpty(this.Email))
             {
                 await Application.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "You must enter an email...",
-                    "Accept");
+                    Languages.Error,
+                    Languages.EmailValidation,
+                    Languages.Accept);
                 return;
             }
 
             if (string.IsNullOrEmpty(this.Password))
             {
                 await Application.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "You must enter an password...",
-                    "Accept");
+                    Languages.Error,
+                    Languages.PasswordValidation,
+                    Languages.Accept);
+                this.Password = string.Empty;
                 return;
             }
 
@@ -119,13 +124,15 @@ namespace Lands.ViewModels
 
 
             if (this.Email != "druizbermud@uniminuto.edu.co" ||
-                this.Password != "123")
-            { 
+               this.Password != "123")
+            {
+                this.IsRunning = false;
+                this.IsEnable = true;
+
                 await Application.Current.MainPage.DisplayAlert(
-                    "Error",
-                    "Email or password are wrong...",
-                    "Accept");
-                this.Password = string.Empty;
+                    Languages.Error,
+                    Languages.SomethingWrong,
+                    Languages.Accept);
                 return;
             }
 
@@ -143,9 +150,14 @@ namespace Lands.ViewModels
             //para luego usarlo aca con lo que garantizamos que antes de pintar la 
             //lands page estamos estableciendo la landsViewModel 
 
-            MainViewModel.GetInstance().Lands = new LandsViewModel(); 
-            await Application.Current.MainPage.Navigation.PushAsync(
-                  new LandsPage());
+            MainViewModel.GetInstance().Lands = new LandsViewModel();
+
+            /*Esta linea era antes de colocar el Munu, ahora ya no hacemos Push sino 
+             * cerrar la sesion otra forma de navegar es cambiando la MainPage
+             * await Application.Current.MainPage.Navigation.PushAsync(
+                  new LandsPage());*/
+
+            Application.Current.MainPage = new MasterPage();
             
         }
 
